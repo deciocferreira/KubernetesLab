@@ -4,21 +4,11 @@
 
 Orquestrador de containers. Responsável por organizar, controlar e gerenciar containers.
 
-## Container
-Container é uma forma de realizar isolamento de recursos.
+## Arquitetura
 
-Container Engine
-- Responsável pela criação do container (docker, podman) pontos de montagem, rede,volume e verificação da saúde do container. Não conversa com o Kernel diretamente e depende do Container runtime para essa finalidade.
+É um modelo baseado em control plane/workers, que constituem um cluster, onde para seu funcionamento é recomendado no mínimo três nós: o nó control-plane, responsável (por padrão) pelo gerenciamento do cluster, e os demais como workers, executores das aplicações.
 
-Container Runtime
-- Especializado em conversar com o Kernel e executar os container, garantir que funcionem os isolamentos
-Low Level executados pelo Kernel(Sandbox, RunC). 
-High level executados por um Container Engine (ContainerD)
-
-## OCI
-- Open Container Initiative. Padronização para adoção de containers.
-
-## Arquitetura do Kubernetes
+<image src="https://user-images.githubusercontent.com/12403699/229541775-1db96bc0-641b-41f5-bc9e-a51f7c7072a7.png" width="800" height="500">
 
 *ControlPlane* **Controla o Cluster. Responsável por garantir a saúde, capacidade e estado do Cluster.**
 Componentes:
@@ -29,8 +19,8 @@ Componentes:
 
 *Workers* **Contem as aplicações em execução.**
 Componentes:
- - Kubelet(Agent do Kubernets dentro do node conversando com o KubeAPIServer)
- - KubeProxy(Faz a comunicação dos Pods com o restante da internet, expondo-o)
+ - Kubelet (Agent do Kubernets dentro do node conversando com o KubeAPIServer)
+ - KubeProxy (Faz a comunicação dos Pods com o restante da internet, expondo-o)
  
 ## Portas de comunicação:
 
@@ -47,6 +37,20 @@ Componentes:
 - *NodePort* **30000/32767 TCP**
 
 - *Weave Network* **6783/6784 TCP/UDP**
+
+## Container
+Container é uma forma de realizar isolamento de recursos.
+
+Container Engine
+- Responsável pela criação do container (docker, podman) pontos de montagem, rede,volume e verificação da saúde do container. Não conversa com o Kernel diretamente e depende do Container runtime para essa finalidade.
+
+Container Runtime
+- Especializado em conversar com o Kernel e executar os container, garantir que funcionem os isolamentos
+Low Level executados pelo Kernel(Sandbox, RunC). 
+High level executados por um Container Engine (ContainerD)
+
+## OCI
+- Open Container Initiative. Padronização para adoção de containers.
 
 ## Conceitos importantes:
 *Pod* **Menor unidade de um CLuster e contém um ou mais containers. Tem somente um isolamento (IP, recurso e etc) e compartilha as informações com os devidos containers. Eles ficam dentro do Namespace kube-system.** 
@@ -70,3 +74,16 @@ Componentes:
 *dry run* **Simulação de pods.**
 
 *kubectl apply -f* **Aplica configurações de um arquivo .yaml**
+
+
+## Referências 
+
+*https://k3d.io/v5.4.6/?h=install#other-installers*
+
+*https://k3d.io/v5.4.6/usage/multiserver/*
+
+*https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal-clusters*
+
+*https://github.com/kubernetes/kubernetes/*
+
+*https://kubernetes.io/docs/home/*
