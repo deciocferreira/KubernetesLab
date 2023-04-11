@@ -71,7 +71,25 @@ HPA - *Horizontal Pod AutoScaling*
 
 Quando determinada métrica de aplicação alcançar determinado nível podemos configurar HPA para escalar um número de Pods necessários para que não haja gargalos na aplicação.
 
--> Networking (Serviços, DNS, Ingress, Ingress Controllers).
+## Networking (Serviços, DNS, Ingress, Ingress Controllers).
+
+Primeira coisa que devemos entender é que o Kubernetes não resolve como funciona a comunicação de pods em nós diferentes, para que isso seja resolvido é necessário utilizar o que chamamos de pod networking.
+
+Ou seja, o k8s por padrão não fornece uma solução de networking out-of-the-box.
+
+Para resolver esse problema foi criado o Container Network Interface, o CNI. O CNI nada mais é do que uma especificação e um conjunto de bibliotecas para a criação de soluções de pod networking, ou seja, plugins para resolver o problema de comunicação entre os pods.
+
+Temos diversas solução de pod networking como add-on, cada qual com funcionalidades diferentes, tais como: Flannel, Calico, Romana, Weave-net, entre outros.
+
+É importante saber as caracteristicas de cada solução e como elas resolvem a comunicação entre os pods.
+
+Por exemplo, temos soluções que utilizam eBPF como é o caso do Cilium, ou ainda soluções que atuam na camada 3 ou na camada 7 do modelo de referencia OSI.
+
+Dito isso, a melhor coisa é você ler os detalhes de cada solução e entender qual a melhor antende suas necessidades.
+
+Eu gosto muito da Weave-net e será ela que iremos abordar durante o treinamento, na dúvida de qual usar, vá de Weave-net! :)
+
+Para instalar o Weave-net execute o seguinte comando no nó control plane.
 
 ## Comandos e parâmetros:
 
