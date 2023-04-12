@@ -90,6 +90,17 @@ Dito isso, a melhor coisa é você ler os detalhes de cada solução e entender 
 Eu gosto muito da Weave-net e será ela que iremos abordar durante o treinamento, na dúvida de qual usar, vá de Weave-net! :)
 
 Para instalar o Weave-net execute o seguinte comando no nó control plane.
+ 
+ O k8s organiza tudo dentro de namespaces. Por meio deles, podem ser realizadas limitações de segurança e de recursos dentro do cluster, tais como pods, replication controllers e diversos outros. Para visualizar os namespaces disponíveis no cluster, digite:
+ 
+ Dispositivos fora do cluster, por padrão, não conseguem acessar os pods criados, como é comum em outros sistemas de contêineres. Para expor um pod, execute o comando a seguir.
+
+kubectl expose pod nginx
+Será apresentada a seguinte mensagem de erro:
+
+error: couldn't find port via --port flag or introspection
+See 'kubectl expose -h' for help and examples
+O erro ocorre devido ao fato do k8s não saber qual é a porta de destino do contêiner que deve ser exposta (no caso, a 80/TCP). Para configurá-la, vamos primeiramente remover o nosso pod antigo
 
 ## Comandos e parâmetros:
 
