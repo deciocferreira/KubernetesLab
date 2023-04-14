@@ -61,46 +61,23 @@ High level executados por um Container Engine (ContainerD)
 
 *Service* **Responsável por fazer com que os Pods fiquem acessível fora do Cluster ou Node. Expoe a aplicação para ser acessada.**
 
-*Ingress* **Gerenciador de acesso externo aos serviços dentro do cluster. Ele atua como uma camada de abstração acima dos serviços e roteia as solicitações de entrada para os serviços apropriados com base nas regras definidas. Ele define um conjunto de regras de roteamento que determinam como o tráfego externo deve ser direcionado para os serviços dentro do cluster. Ele permite que você expõe vários serviços HTTP e HTTPS em um único endereço IP e porta, fornecendo assim um controle centralizado e flexível do tráfego. Podem ser implementados por meio de diferentes controladores, como o Nginx, Traefik, Istio, entre outros. Cada controlador pode oferecer diferentes recursos, como balanceamento de carga, redirecionamento, autenticação, criptografia, e etc.**
-
 -> Gerenciamento de pods (deployments, statefulsets, daemonsets);
 
--> Elasticidade (HPA, VPA);
+## Networking (Serviços, DNS, Ingress Controllers).
+
+Primeira coisa que devemos entender é que o Kubernetes por padrão não fornece uma solução de networking de pods em nós diferentes, para que isso seja resolvido é necessário utilizar o que chamamos de pod networking. Para resolver esse problema foi criado o Container Network Interface. O CNI nada mais é do que um conjunto de plugins para resolver o problema de comunicação entre os pods. Temos diversas solução de pod networking como add-on, cada qual com funcionalidades diferentes, tais como: Flannel, Calico, Romana, Weave-net, entre outros.
+ 
+O k8s organiza tudo dentro de namespaces. Por meio deles, podem ser realizadas limitações de segurança e de recursos dentro do cluster, tais como pods, replication controllers e diversos outros. Para visualizar os namespaces disponíveis no cluster, digite:
+ 
+Dispositivos fora do cluster, por padrão, não conseguem acessar os pods criados, como é comum em outros sistemas de contêineres. Para expor um pod, execute o comando a seguir.
+
+kubectl expose pod nginx
+
+*Ingress* **Gerenciador de acesso externo aos serviços dentro do cluster. Ele atua como uma camada de abstração acima dos serviços e roteia as solicitações de entrada para os serviços apropriados com base nas regras definidas. Ele define um conjunto de regras de roteamento que determinam como o tráfego externo deve ser direcionado para os serviços dentro do cluster. Ele permite que você expõe vários serviços HTTP e HTTPS em um único endereço IP e porta, fornecendo assim um controle centralizado e flexível do tráfego. Podem ser implementados por meio de diferentes controladores, como o Nginx, Traefik, Istio, entre outros. Cada controlador pode oferecer diferentes recursos, como balanceamento de carga, redirecionamento, autenticação, criptografia, e etc.**
 
 HPA - *Horizontal Pod AutoScaling*
 
 Quando determinada métrica de aplicação alcançar determinado nível podemos configurar HPA para escalar um número de Pods necessários para que não haja gargalos na aplicação.
-
-## Networking (Serviços, DNS, Ingress, Ingress Controllers).
-
-Primeira coisa que devemos entender é que o Kubernetes não resolve como funciona a comunicação de pods em nós diferentes, para que isso seja resolvido é necessário utilizar o que chamamos de pod networking.
-
-Ou seja, o k8s por padrão não fornece uma solução de networking out-of-the-box.
-
-Para resolver esse problema foi criado o Container Network Interface, o CNI. O CNI nada mais é do que uma especificação e um conjunto de bibliotecas para a criação de soluções de pod networking, ou seja, plugins para resolver o problema de comunicação entre os pods.
-
-Temos diversas solução de pod networking como add-on, cada qual com funcionalidades diferentes, tais como: Flannel, Calico, Romana, Weave-net, entre outros.
-
-É importante saber as caracteristicas de cada solução e como elas resolvem a comunicação entre os pods.
-
-Por exemplo, temos soluções que utilizam eBPF como é o caso do Cilium, ou ainda soluções que atuam na camada 3 ou na camada 7 do modelo de referencia OSI.
-
-Dito isso, a melhor coisa é você ler os detalhes de cada solução e entender qual a melhor antende suas necessidades.
-
-Eu gosto muito da Weave-net e será ela que iremos abordar durante o treinamento, na dúvida de qual usar, vá de Weave-net! :)
-
-Para instalar o Weave-net execute o seguinte comando no nó control plane.
- 
- O k8s organiza tudo dentro de namespaces. Por meio deles, podem ser realizadas limitações de segurança e de recursos dentro do cluster, tais como pods, replication controllers e diversos outros. Para visualizar os namespaces disponíveis no cluster, digite:
- 
- Dispositivos fora do cluster, por padrão, não conseguem acessar os pods criados, como é comum em outros sistemas de contêineres. Para expor um pod, execute o comando a seguir.
-
-kubectl expose pod nginx
-Será apresentada a seguinte mensagem de erro:
-
-error: couldn't find port via --port flag or introspection
-See 'kubectl expose -h' for help and examples
-O erro ocorre devido ao fato do k8s não saber qual é a porta de destino do contêiner que deve ser exposta (no caso, a 80/TCP). Para configurá-la, vamos primeiramente remover o nosso pod antigo
 
 ## Comandos e parâmetros:
 
@@ -115,7 +92,6 @@ O erro ocorre devido ao fato do k8s não saber qual é a porta de destino do con
 *dry run* **Simulação de pods.**
 
 *kubectl apply -f* **Aplica configurações de um arquivo .yaml**
-
 
 ## Referências 
 
