@@ -78,8 +78,36 @@ kubectl expose pod nginx
 HPA - *Horizontal Pod AutoScaling*
 
 Quando determinada métrica de aplicação alcançar determinado nível podemos configurar HPA para escalar um número de Pods necessários para que não haja gargalos na aplicação.
+ 
+## Componentes do K8s
 
-## Comandos e parâmetros:
+- Master node
+  - kube-apiserver é a central de operações do cluster k8s. Todas as chamadas, internas ou externas são tratadas por ele. Ele é o único que conecta no ETCD.
+
+  - kube-scheduller usa um algoritmo para verificar em qual node o pod deverá ser hospedado. Ele verifica os recursos disponíveis do node para verificar qual o melhor node para receber aquele pod.
+ 
+- Worker node 
+  - kubelet interage com o Docker instalado no node e garante que os contêineres que precisavam estar em execução realmente estão.
+
+  - kube-proxy é o responsável por gerenciar a rede para os contêineres, é o responsável por expor portas dos mesmos.
+ 
+- Services: É uma forma de você expor a comunicação através de um *NodePort* ou *LoadBalancer* para distribuir as requisições entre diversos Pods daquele Deployment. Funciona como um balanceador de carga.
+
+- Controllers: 
+  - kube-controller-manager é o controle principal que interage com o kube-apiserver para determinar o seu estado. Se o estado não bate, o manager irá contactar o controller necessário para checar seu estado desejado. Tem diversos controllers em uso como: os endpoints, namespace e replication.
+ 
+- Pods: É a menor unidade que você irá tratar no k8s. Pode conter mais de um contêiner e vale reassaltar que os diversos serviços sendo executados dessa maneira, compartilham o mesmo IP e demais recursos. Uma das boas razões para se ter mais de um contêiner é o fato de você ter os logs consolidados e centralizados.
+
+Namespaces e quotas:
+ - Supervisord é o responsável por monitorar e restabelecer, se necessário, o kubelet e o Docker. Por esse motivo, quando existe algum problema em relação ao kubelet, como por exemplo o uso do driver cgroup diferente do que está rodando no Docker, você perceberá que ele ficará tentando subir o kubelet frequentemente.
+ 
+- Storage: No ETCD são armazenados o estado do cluster, rede e outras informações persistentes.
+
+*Network e policies*
+ 
+Principais Comandos
+ 
+ <image src="https://user-images.githubusercontent.com/12403699/232628319-12e7f0a5-fb1b-4da1-99bf-155e77f212a4.png" width="700" height="350">
 
 *kubectl run --image nginx --port 80* **Criação de Pod.**
 
