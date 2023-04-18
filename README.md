@@ -1,10 +1,26 @@
-# KubernetesLab 
+# Kubernetes 
 
 <image src="https://user-images.githubusercontent.com/12403699/227604690-54fb4263-a38a-4cd5-a4dc-951b19861625.png" width="80" height="80">
 
 Orquestrador de containers. Responsável por organizar, controlar e gerenciar containers.
 
-## Arquitetura
+## Container
+Container é uma forma de realizar isolamento de recursos. Quando criamos um Pod podemos especificar a quantidade de CPU e Memória (RAM) que pode ser consumida em cada container. Quando algum container contém a configuração de limite de recursos o Scheduler fica responsável por alocar esse contêiner no melhor nó possível de acordo com os recursos disponíveis.
+
+Podemos configurar dois tipos de recursos, CPU que é especificada em unidades de núcleos e Memória que é especificada em unidades de bytes. 
+
+Container Engine
+- Responsável pela criação do container (docker, podman) pontos de montagem, rede,volume e verificação da saúde do container. Não conversa com o Kernel diretamente e depende do Container runtime para essa finalidade.
+
+Container Runtime
+- Especializado em conversar com o Kernel e executar os container, garantir que funcionem os isolamentos
+Low Level executados pelo Kernel(Sandbox, RunC). 
+High level executados por um Container Engine (ContainerD)
+
+OCI
+- Open Container Initiative. Padronização para adoção de containers.
+ 
+## Arquitetura do K8s
 
 É um modelo baseado em control plane/workers, que constituem um cluster, onde para seu funcionamento é recomendado no mínimo três nós: o nó control-plane, responsável (por padrão) pelo gerenciamento do cluster, e os demais como workers, executores das aplicações.
 
@@ -22,7 +38,7 @@ Componentes:
  - Kubelet (Agent do Kubernets dentro do node conversando com o KubeAPIServer)
  - KubeProxy (Faz a comunicação dos Pods com o restante da internet, expondo-o)
  
-## Portas de comunicação:
+## Portas de comunicação
 
 - *KubeAPIServer:* **6443 TCP**
 
@@ -36,36 +52,37 @@ Componentes:
 
 - *NodePort* **30000/32767 TCP**
 
-- *Weave Network* **6783/6784 TCP/UDP**
+- *Weave Network* **6783/6784 TCP/UDP** 
+ 
+ 
+## Conceitos importantes e Componentes do K8s
 
-## Container
-Container é uma forma de realizar isolamento de recursos. Quando criamos um Pod podemos especificar a quantidade de CPU e Memória (RAM) que pode ser consumida em cada container. Quando algum container contém a configuração de limite de recursos o Scheduler fica responsável por alocar esse contêiner no melhor nó possível de acordo com os recursos disponíveis.
+- Master node
+  - kube-apiserver é a central de operações do cluster k8s. Todas as chamadas, internas ou externas são tratadas por ele. Ele é o único que conecta no ETCD.
 
-Podemos configurar dois tipos de recursos, CPU que é especificada em unidades de núcleos e Memória que é especificada em unidades de bytes. 
+  - kube-scheduller usa um algoritmo para verificar em qual node o pod deverá ser hospedado. Ele verifica os recursos disponíveis do node para verificar qual o melhor     node para receber aquele pod.
+ 
+- Worker node 
+  - kubelet interage com o Docker instalado no node e garante que os contêineres que precisavam estar em execução realmente estão.
 
-Container Engine
-- Responsável pela criação do container (docker, podman) pontos de montagem, rede,volume e verificação da saúde do container. Não conversa com o Kernel diretamente e depende do Container runtime para essa finalidade.
+  - kube-proxy é o responsável por gerenciar a rede para os contêineres, é o responsável por expor portas dos mesmos.
+ 
+- Services: É uma forma de você expor a comunicação através de um *NodePort* ou *LoadBalancer* para distribuir as requisições entre diversos Pods daquele Deployment. Funciona como um balanceador de carga.
 
-Container Runtime
-- Especializado em conversar com o Kernel e executar os container, garantir que funcionem os isolamentos
-Low Level executados pelo Kernel(Sandbox, RunC). 
-High level executados por um Container Engine (ContainerD)
+- Controllers: 
+  - kube-controller-manager é o controle principal que interage com o kube-apiserver para determinar o seu estado. Se o estado não bate, o manager irá contactar o controller necessário para checar seu estado desejado. Tem diversos controllers em uso como: os endpoints, namespace e replication.
+ 
+- Pods: É a menor unidade que você irá tratar no k8s dentro de um cluster. Pode conter mais de um contêiner e vale reassaltar que os diversos serviços sendo executados dessa maneira, compartilham o mesmo IP e demais recursos. Uma das boas razões para se ter mais de um contêiner é o fato de você ter os logs consolidados e centralizados.
 
-## OCI
-- Open Container Initiative. Padronização para adoção de containers.
-
-## Conceitos importantes:
-*Pod* **Menor unidade de um CLuster e contém um ou mais containers. Tem somente um isolamento (IP, recurso e etc) e compartilha as informações com os devidos containers. Eles ficam dentro do Namespace kube-system.** 
-
-*Deployment* **Responsável por criar infra de acordo com necessidade.**
+*Deployment* - É um recurso com a responsabilidade de instruir o Kubernetes a criar, atualizar e monitorar a saúde das instâncias de suas aplicações. É responsável por gerenciar o seu ReplicaSet, ou seja, o Deployment é quem vai determinar a configuração de sua aplicação e como ela será implementada. O Deployment é o controller que irá cuidar, por exemplo, uma instância de sua aplicação por algum motivo for interrompida. O Deployment controller irá identificar o problema com a instância e irá criar uma nova em seu lugar. **Cria infra de acordo com necessidade.**
 
 *ReplicaSet* **Controlador de Pods que garante a quantidade e mantem replicas do Deployment.**
 
 *Service* **Responsável por fazer com que os Pods fiquem acessível fora do Cluster ou Node. Expoe a aplicação para ser acessada.**
 
--> Gerenciamento de pods (deployments, statefulsets, daemonsets);
+-> Gerenciamento de pods (statefulsets, daemonsets);
 
-## Networking (Serviços, DNS, Ingress Controllers).
+## Networking (Serviços, Ingress Controllers).
 
 Primeira coisa que devemos entender é que o Kubernetes por padrão não fornece uma solução de networking de pods em nós diferentes, para que isso seja resolvido é necessário utilizar o que chamamos de pod networking. Para resolver esse problema foi criado o Container Network Interface. O CNI nada mais é do que um conjunto de plugins para resolver o problema de comunicação entre os pods. Há diversas soluções de pod networking como add-on, tais como: Calico, Weave-net e entre outros.
 
@@ -79,6 +96,10 @@ O k8s organiza tudo dentro de namespaces. Nada mais é do que um cluster virtual
  
 *kubectl get namespaces*
  
+Como visto anteriormente, temos a possibilidade de adicionar limites de memória e cpu para cada contêiner que subir nesse Namespace, se algum contêiner for criado dentro do Namespace sem as configurações de Limitrange, o contêiner irá herdar as configurações de limites de recursos do Namespace.
+ 
+<image src="https://user-images.githubusercontent.com/12403699/232863578-c219bc4a-b43f-4aeb-b927-3ecafa615d68.png" width="800" height="400">
+  
 Dispositivos fora do cluster, por padrão, não conseguem acessar os pods criados, como é comum em outros sistemas de contêineres. Para expor um pod, execute o comando a seguir.
 
 *kubectl expose pod nginx*
@@ -99,25 +120,6 @@ Para listar os EndPoints criados, execute o comando:
 
 kubectl get endpoints 
  
-## Componentes do K8s
-
-- Master node
-  - kube-apiserver é a central de operações do cluster k8s. Todas as chamadas, internas ou externas são tratadas por ele. Ele é o único que conecta no ETCD.
-
-  - kube-scheduller usa um algoritmo para verificar em qual node o pod deverá ser hospedado. Ele verifica os recursos disponíveis do node para verificar qual o melhor node para receber aquele pod.
- 
-- Worker node 
-  - kubelet interage com o Docker instalado no node e garante que os contêineres que precisavam estar em execução realmente estão.
-
-  - kube-proxy é o responsável por gerenciar a rede para os contêineres, é o responsável por expor portas dos mesmos.
- 
-- Services: É uma forma de você expor a comunicação através de um *NodePort* ou *LoadBalancer* para distribuir as requisições entre diversos Pods daquele Deployment. Funciona como um balanceador de carga.
-
-- Controllers: 
-  - kube-controller-manager é o controle principal que interage com o kube-apiserver para determinar o seu estado. Se o estado não bate, o manager irá contactar o controller necessário para checar seu estado desejado. Tem diversos controllers em uso como: os endpoints, namespace e replication.
- 
-- Pods: É a menor unidade que você irá tratar no k8s. Pode conter mais de um contêiner e vale reassaltar que os diversos serviços sendo executados dessa maneira, compartilham o mesmo IP e demais recursos. Uma das boas razões para se ter mais de um contêiner é o fato de você ter os logs consolidados e centralizados.
-
 Namespaces e quotas:
  - Supervisord é o responsável por monitorar e restabelecer, se necessário, o kubelet e o Docker. Por esse motivo, quando existe algum problema em relação ao kubelet, como por exemplo o uso do driver cgroup diferente do que está rodando no Docker, você perceberá que ele ficará tentando subir o kubelet frequentemente.
  
@@ -125,6 +127,12 @@ Namespaces e quotas:
 
 *Network e policies*
  
+##Kubectl Taint
+ 
+O Taint no K8s é adicionar propriedades ao nó do cluster para impedir que os pods sejam alocados em nós inapropriados. Por exemplo, todo nó master do cluster é marcado para não receber pods que não sejam de gerenciamento do cluster. O nó master está marcado com o taint NoSchedule, assim o scheduler do Kubernetes não aloca pods no nó master, e procura outros nós no cluster sem essa marca.
+ 
+<image src="https://user-images.githubusercontent.com/12403699/232866300-a86a6a3c-bcf5-41e8-8b0a-5afab349be53.png" width="800" height="500"> 
+  
 Principais Comandos
  
  <image src="https://user-images.githubusercontent.com/12403699/232628319-12e7f0a5-fb1b-4da1-99bf-155e77f212a4.png" width="700" height="350">
