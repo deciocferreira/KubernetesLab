@@ -39,7 +39,9 @@ Componentes:
 - *Weave Network* **6783/6784 TCP/UDP**
 
 ## Container
-Container é uma forma de realizar isolamento de recursos.
+Container é uma forma de realizar isolamento de recursos. Quando criamos um Pod podemos especificar a quantidade de CPU e Memória (RAM) que pode ser consumida em cada container. Quando algum container contém a configuração de limite de recursos o Scheduler fica responsável por alocar esse contêiner no melhor nó possível de acordo com os recursos disponíveis.
+
+Podemos configurar dois tipos de recursos, CPU que é especificada em unidades de núcleos e Memória que é especificada em unidades de bytes. 
 
 Container Engine
 - Responsável pela criação do container (docker, podman) pontos de montagem, rede,volume e verificação da saúde do container. Não conversa com o Kernel diretamente e depende do Container runtime para essa finalidade.
@@ -65,19 +67,37 @@ High level executados por um Container Engine (ContainerD)
 
 ## Networking (Serviços, DNS, Ingress Controllers).
 
-Primeira coisa que devemos entender é que o Kubernetes por padrão não fornece uma solução de networking de pods em nós diferentes, para que isso seja resolvido é necessário utilizar o que chamamos de pod networking. Para resolver esse problema foi criado o Container Network Interface. O CNI nada mais é do que um conjunto de plugins para resolver o problema de comunicação entre os pods. Temos diversas solução de pod networking como add-on, cada qual com funcionalidades diferentes, tais como: Flannel, Calico, Romana, Weave-net, entre outros.
+Primeira coisa que devemos entender é que o Kubernetes por padrão não fornece uma solução de networking de pods em nós diferentes, para que isso seja resolvido é necessário utilizar o que chamamos de pod networking. Para resolver esse problema foi criado o Container Network Interface. O CNI nada mais é do que um conjunto de plugins para resolver o problema de comunicação entre os pods. Há diversas soluções de pod networking como add-on, tais como: Calico, Weave-net e entre outros.
+
+As características básicas da rede do k8s são:
+
+- Todos os pods conseguem se comunicar entre eles em diferentes nodes;
+- Todos os nodes podem se comunicar com todos os pods;
+- Não utilizar NAT. 
  
-O k8s organiza tudo dentro de namespaces. Por meio deles, podem ser realizadas limitações de segurança e de recursos dentro do cluster, tais como pods, replication controllers e diversos outros. Para visualizar os namespaces disponíveis no cluster, digite:
+O k8s organiza tudo dentro de namespaces. Nada mais é do que um cluster virtual dentro do próprio cluster físico do Kubernetes. Namespaces são uma maneira de dividir recursos de um cluster entre vários ambientes, equipes ou projetos. Por meio deles, podem ser realizadas limitações de segurança e de recursos dentro do cluster, tais como pods, replication controllers e diversos outros. Para visualizar os namespaces disponíveis no cluster, digite:
+ 
+*kubectl get namespaces*
  
 Dispositivos fora do cluster, por padrão, não conseguem acessar os pods criados, como é comum em outros sistemas de contêineres. Para expor um pod, execute o comando a seguir.
 
-kubectl expose pod nginx
+*kubectl expose pod nginx*
+ 
+*Port Forwarding* **Caso queria encaminhar o tráfego da porta local para a porta do pod, podemos usar por exemplo: *kubectl port-forward nginx 8080:80***
+
+*DNS* **Por padrão no K8s, os pods de DNS-core tem a capacidade de detectar os outros pods, dentro do seu próprio Namespace ou em outro.**
 
 *Ingress* **Gerenciador de acesso externo aos serviços dentro do cluster. Ele atua como uma camada de abstração acima dos serviços e roteia as solicitações de entrada para os serviços apropriados com base nas regras definidas. Ele define um conjunto de regras de roteamento que determinam como o tráfego externo deve ser direcionado para os serviços dentro do cluster. Ele permite que você expõe vários serviços HTTP e HTTPS em um único endereço IP e porta, fornecendo assim um controle centralizado e flexível do tráfego. Podem ser implementados por meio de diferentes controladores, como o Nginx, Traefik, Istio, entre outros. Cada controlador pode oferecer diferentes recursos, como balanceamento de carga, redirecionamento, autenticação, criptografia, e etc.**
 
 HPA - *Horizontal Pod AutoScaling*
 
 Quando determinada métrica de aplicação alcançar determinado nível podemos configurar HPA para escalar um número de Pods necessários para que não haja gargalos na aplicação.
+ 
+EndPoint - Sempre que criamos um service, automaticamente é criado um endpoint. O endpoint nada mais é do que o IP do pod que o service irá utilizar. Quando batemos nesse IP ele redireciona a conexão para o Pod através desse IP.
+
+Para listar os EndPoints criados, execute o comando:
+
+kubectl get endpoints 
  
 ## Componentes do K8s
 
@@ -121,8 +141,12 @@ Principais Comandos
 
 *kubectl apply -f* **Aplica configurações de um arquivo .yaml**
 
-## Referências 
+## Referências
+  
+*https://kubernetes.io/blog/2020/05/21/wsl-docker-kubernetes-on-the-windows-desktop/*
 
+*https://www.weave.works/docs/net/latest/kubernetes/kube-addon/#install*
+  
 *https://k3d.io/v5.4.6/?h=install#other-installers*
 
 *https://k3d.io/v5.4.6/usage/multiserver/*
