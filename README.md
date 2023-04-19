@@ -91,7 +91,7 @@ Componentes:
 
 Usamos quando precisamos verificar quais foram as modificações que aconteceram em seu Deployment ou DaemonSet, como se fosse um versionamento. 
 
-<image src="https://user-images.githubusercontent.com/12403699/233206212-22965bef-0d9e-4fef-a089-c0f50adecc48.png" width="800" height="400"> 
+<image src="https://user-images.githubusercontent.com/12403699/233206212-22965bef-0d9e-4fef-a089-c0f50adecc48.png" width="800" height="200"> 
  
 Por padrão, o DaemonSet guarda apenas as 10 últimas revisions. Para alterar a quantidade máxima de revisions no nosso Daemonset, execute o seguinte comando.
 
