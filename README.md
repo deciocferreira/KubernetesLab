@@ -52,8 +52,7 @@ Componentes:
 
 - *NodePort* **30000/32767 TCP**
 
-- *Weave Network* **6783/6784 TCP/UDP** 
- 
+- *Weave Network* **6783/6784 TCP/UDP**  
  
 ## Conceitos importantes e Componentes do K8s
 
@@ -76,13 +75,31 @@ Componentes:
 
 *Deployment* - É um recurso com a responsabilidade de instruir o Kubernetes a criar, atualizar e monitorar a saúde das instâncias de suas aplicações. É responsável por gerenciar o seu ReplicaSet, ou seja, o Deployment é quem vai determinar a configuração de sua aplicação e como ela será implementada. O Deployment é o controller que irá cuidar, por exemplo, uma instância de sua aplicação por algum motivo for interrompida. O Deployment controller irá identificar o problema com a instância e irá criar uma nova em seu lugar. **Cria infra de acordo com necessidade.**
 
-*ReplicaSet* **Controlador de Pods que garante a quantidade e mantem replicas do Deployment.**
+*ReplicaSet* Garante a quantidade solicitada de pods e os recursos necessários para um Deployment. Uma vez que o Deployment é criado, é o ReplicaSet que controla a quantidade de pods em execução, caso algum pod seja finalizado, ele que irá detectar e solicitar que outro pod seja executado em seu lugar, garantindo assim a quantidade de réplicas solicitadas. Age como um controlador que garante e mantem as replicas do Deployment.
+ 
+<image src="https://user-images.githubusercontent.com/12403699/233199822-2a4a65a2-1f1e-4d45-9289-9788c01949f6.png" width="800" height="400"> 
 
 *Service* **Responsável por fazer com que os Pods fiquem acessível fora do Cluster ou Node. Expoe a aplicação para ser acessada.**
 
--> Gerenciamento de pods (statefulsets, daemonsets);
+## Gerenciamento de pods (statefulsets)
 
-## Networking (Serviços, Ingress Controllers).
+*DaemonSet* é semelhante ao ReplicaSet, com a diferença que quando você utiliza o DaemonSet você não especifica o número de réplicas, ele subirá um pod por node em seu cluster. Ele ótimo para serviços que necessitem rodar em todos os nodes do cluster, como por exemplo, coletores de logs e agentes de monitoração.
+
+<image src="https://user-images.githubusercontent.com/12403699/233205526-1826b85b-696d-4321-99f8-baf1bbe331a0.png" width="800" height="400"> 
+ 
+## Rollouts e Rollbacks
+
+Usamos quando precisamos verificar quais foram as modificações que aconteceram em seu Deployment ou DaemonSet, como se fosse um versionamento. 
+
+<image src="https://user-images.githubusercontent.com/12403699/233206212-22965bef-0d9e-4fef-a089-c0f50adecc48.png" width="800" height="400"> 
+ 
+Por padrão, o DaemonSet guarda apenas as 10 últimas revisions. Para alterar a quantidade máxima de revisions no nosso Daemonset, execute o seguinte comando.
+
+kubectl edit daemonsets.apps daemon-set-primeiro 
+
+Para atualizar pods do DaemonSet precisamos recriá-lo ou destruir todos os pods relacionado a ele. Como boa prática, temos a opção RollingUpdate
+ 
+## Networking (Ingress Controllers).
 
 Primeira coisa que devemos entender é que o Kubernetes por padrão não fornece uma solução de networking de pods em nós diferentes, para que isso seja resolvido é necessário utilizar o que chamamos de pod networking. Para resolver esse problema foi criado o Container Network Interface. O CNI nada mais é do que um conjunto de plugins para resolver o problema de comunicação entre os pods. Há diversas soluções de pod networking como add-on, tais como: Calico, Weave-net e entre outros.
 
@@ -96,7 +113,7 @@ O k8s organiza tudo dentro de namespaces. Nada mais é do que um cluster virtual
  
 *kubectl get namespaces*
  
-Como visto anteriormente, temos a possibilidade de adicionar limites de memória e cpu para cada contêiner que subir nesse Namespace, se algum contêiner for criado dentro do Namespace sem as configurações de Limitrange, o contêiner irá herdar as configurações de limites de recursos do Namespace.
+Como visto anteriormente, temos a possibilidade de adicionar limites de memória e cpu para cada container que subir nesse Namespace, se algum container for criado dentro do Namespace sem as configurações de Limitrange, o container irá herdar as configurações de limites de recursos do Namespace.
  
 <image src="https://user-images.githubusercontent.com/12403699/232863578-c219bc4a-b43f-4aeb-b927-3ecafa615d68.png" width="800" height="400">
   
@@ -129,9 +146,25 @@ Namespaces e quotas:
  
 ##Kubectl Taint
  
-O Taint no K8s é adicionar propriedades ao nó do cluster para impedir que os pods sejam alocados em nós inapropriados. Por exemplo, todo nó master do cluster é marcado para não receber pods que não sejam de gerenciamento do cluster. O nó master está marcado com o taint NoSchedule, assim o scheduler do Kubernetes não aloca pods no nó master, e procura outros nós no cluster sem essa marca.
- 
+*Taint* no K8s é adicionar propriedades ao nó do cluster para impedir que os pods sejam alocados em nós inapropriados. Por exemplo, todo nó master do cluster é marcado para não receber pods que não sejam de gerenciamento do cluster. O nó master está marcado com o taint NoSchedule, assim o scheduler do Kubernetes não aloca pods no nó master, e procura outros nós no cluster sem essa marca.
+
 <image src="https://user-images.githubusercontent.com/12403699/232866300-a86a6a3c-bcf5-41e8-8b0a-5afab349be53.png" width="800" height="500"> 
+ 
+## Labels
+ 
+São utilizadas para a organização do cluster, vamos listar pods que tenha a marcação "Warsaw" por exemplo:
+ 
+<image src="https://user-images.githubusercontent.com/12403699/233195389-d9b32da6-bd7e-4656-8ffe-689802db6378.png" width="800" height="500">   
+
+## Node Selector 
+
+É uma forma de classificar nossos nodes, através das labels, como por exemplo se é produção ou não, se consome muita CPU ou muita RAM, se precisa estar em determinado Namespace.
+ 
+## Kubectl edit
+
+Se usa quando é necessário editar algum deployment ou qualquer objeto Kubernetes(pods, services, configmaps, e etc). O comando abre o arquivo de configuração YAML do objeto em um editor de texto para que você possa editá-lo diretamente. É importante lembrar que a edição direta pode ser perigosa se você não tiver cuidado para não alterar configurações importantes. Sempre faça um backup da configuração antes de editá-la e verifique as alterações antes de aplicá-las.
+
+*kubectl edit deployment deployment.yaml* e adicionar informações de *Label* e ou *nodeSelector* conforme necessidade.
   
 Principais Comandos
  
@@ -150,6 +183,8 @@ Principais Comandos
 *kubectl apply -f* **Aplica configurações de um arquivo .yaml**
 
 ## Referências
+
+*https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#clean-up-policy*
   
 *https://kubernetes.io/blog/2020/05/21/wsl-docker-kubernetes-on-the-windows-desktop/*
 
