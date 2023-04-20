@@ -85,7 +85,26 @@ Componentes:
 
 *DaemonSet* é semelhante ao ReplicaSet, com a diferença que quando você utiliza o DaemonSet você não especifica o número de réplicas, ele subirá um pod por node em seu cluster. Ele ótimo para serviços que necessitem rodar em todos os nodes do cluster, como por exemplo, coletores de logs e agentes de monitoração.
 
-<image src="https://user-images.githubusercontent.com/12403699/233205526-1826b85b-696d-4321-99f8-baf1bbe331a0.png" width="800" height="400"> 
+<image src="https://user-images.githubusercontent.com/12403699/233205526-1826b85b-696d-4321-99f8-baf1bbe331a0.png" width="800" height="400">
+
+##Principais Comandos
+ 
+<image src="https://user-images.githubusercontent.com/12403699/232628319-12e7f0a5-fb1b-4da1-99bf-155e77f212a4.png" width="700" height="350">
+
+*kubectl run --image nginx --port 80* **Criação de Pod.**
+
+*kubectl exec -ti podname --bash* **Acesso ao pod.**
+
+*kubect delete pods* **Apaga determinado pod.**
+
+**kubectl expose pods podname --type* **Expoe um tipo de node.**
+
+*dry run* **Simulação de pods.**
+
+*kubectl apply -f* **Aplica configurações de um arquivo .yaml**
+  
+*Há diferenças entre os comandos kubectl apply -f arquivo.yaml e kubectl create -f arquivo.yaml. O create cria um novo objeto Kubernetes baseado no arquivo YAML fornecido. Se um objeto com o mesmo nome já existir, ele falhará e retornará um erro. Por outro lado, o apply pode criar ou atualizar objetos Kubernetes. Se o objeto ainda não existir, ele será criado. Se o objeto já existir, o kubectl apply atualizará o objeto com base nas alterações definidas no arquivo YAML. Além disso, o kubectl apply também suporta a atualização de objetos com base nas configurações do cluster, permitindo atualizações mais precisas e menos propensas a erros.
+Em resumo, o kubectl create é usado principalmente para criar novos objetos, enquanto o kubectl apply é usado para criar e atualizar objetos existentes.*  
  
 ## Rollouts e Rollbacks
 
@@ -165,23 +184,38 @@ São utilizadas para a organização do cluster, vamos listar pods que tenha a m
 Se usa quando é necessário editar algum deployment ou qualquer objeto Kubernetes(pods, services, configmaps, e etc). O comando abre o arquivo de configuração YAML do objeto em um editor de texto para que você possa editá-lo diretamente. É importante lembrar que a edição direta pode ser perigosa se você não tiver cuidado para não alterar configurações importantes. Sempre faça um backup da configuração antes de editá-la e verifique as alterações antes de aplicá-las.
 
 *kubectl edit deployment deployment.yaml* e adicionar informações de *Label* e ou *nodeSelector* conforme necessidade.
-  
-Principais Comandos
  
- <image src="https://user-images.githubusercontent.com/12403699/232628319-12e7f0a5-fb1b-4da1-99bf-155e77f212a4.png" width="700" height="350">
+## Volumes no K8s
+ 
+*Empty-Dir:*&nbsp;
+São criados sempre que um Pod é atribuído a um nó existente. Esse volume é criado inicialmente vazio, e todos os contêineres do Pod podem ler e gravar arquivos no volume. Nele não há persistência de dados. Sempre que o Pod é removido de um nó, os dados no EmptyDir são excluídos permanentemente. É importante ressaltar que os dados não são excluídos em casos de falhas nos containeres. 
 
-*kubectl run --image nginx --port 80* **Criação de Pod.**
+*Persistent Volume:*&nbsp;
+Volumes que disponibilizam uma API para usuários e administradores que resume detalhes de como o armazenamento é fornecido e consumido pelos Pods. Para o melhor controle desse sistema foi introduzido dois recursos de API: PersistentVolume e PersistentVolumeClaim.
 
-*kubectl exec -ti podname --bash* **Acesso ao pod.**
+ - *PersistentVolume (PV)* 
+     É um recurso no cluster, assim como um nó. Mas nesse caso é um recurso de armazenamento. O PV é uma parte do armazenamento no cluster que foi provisionado por um administrador. Os PVs tem um ciclo de vida independente de qualquer pod associado a ele. Essa API permite armazenamentos do tipo: NFS, ISCSI ou armazenamento de um provedor de nuvem específico.
 
-*kubect delete pods* **Apaga determinado pod.**
+ - *PersistentVolumeClaim (PVC)*
+     É semelhante a um Pod. Os Pods consomem recursos de um nó e os PVCs consomem recursos dos PVs. Resumidamente é uma solicitação de armazenamento criada por um usuário.
+ 
+## *Cron Jobs*
+São uma linha de um arquivo crontab, o mesmo arquivo de uma tabela cron. Ele agenda e executa tarefas periodicamente em um determinado cronograma. São úteis para criar tarefas periódicas e recorrentes, como executar backups ou enviar e-mails.
 
-**kubectl expose pods podname --type* **Expoe um tipo de node.**
+<image src="https://user-images.githubusercontent.com/12403699/233482199-f829d181-6a58-4727-911a-6ebd19a68a2f.png" width="800" height="400">
+ 
+## *Secrets*
+Objetos que são normalmente utilizados para armazenar informações confidenciais, como por exemplo tokens e chaves SSH. Deixar senhas e informações confidenciais em arquivo texto não é uma boa prática visto do olhar de segurança. Colocar essas informações em um objeto Secret permite que o administrador tenha mais controle sobre eles reduzindo assim o risco de exposição acidental.
 
-*dry run* **Simulação de pods.**
+<image src="https://user-images.githubusercontent.com/12403699/233483834-71379f71-887c-4c77-8095-4df9f5a7c59d.png" width="800" height="400">  
+ 
+<image src="https://user-images.githubusercontent.com/12403699/233486003-b6aa0808-c9dc-4e3a-ae32-f9992bb7b136.png" width="800" height="400">  
+ 
+## *ConfigMaps*
+São utilizados para separar arquivos de configuração do conteúdo da imagem de um contêiner, assim podemos adicionar e alterar arquivos de configuração dentro dos Pods sem buildar uma nova imagem de contêiner.
 
-*kubectl apply -f* **Aplica configurações de um arquivo .yaml**
-
+ 
+   
 ## Referências
 
 *https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#clean-up-policy*
