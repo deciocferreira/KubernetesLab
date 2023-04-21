@@ -214,7 +214,8 @@ Objetos que são normalmente utilizados para armazenar informações confidencia
 ## *ConfigMaps*
 São utilizados para separar arquivos de configuração do conteúdo da imagem de um contêiner, assim podemos adicionar e alterar arquivos de configuração dentro dos Pods sem buildar uma nova imagem de contêiner.
 
- 
+<image src="https://user-images.githubusercontent.com/12403699/233660407-13ddf992-ed62-4c3b-b80c-224d5019de83.png" width="800" height="400">
+
    
 ## Referências
 
