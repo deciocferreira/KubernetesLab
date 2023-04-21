@@ -216,6 +216,12 @@ São utilizados para separar arquivos de configuração do conteúdo da imagem d
 
 <image src="https://user-images.githubusercontent.com/12403699/233660407-13ddf992-ed62-4c3b-b80c-224d5019de83.png" width="800" height="400">
 
+## *InitContainers*
+Um ou mais containeres que são executados antes do container de um aplicativo em um Pod. Os containeres de inicialização podem conter utilitários ou scripts de configuração não presentes em uma imagem de aplicativo. Os containeres de inicialização sempre são executados até a conclusão. Cada container init deve ser concluído com sucesso antes que o próximo comece. Se o container init de um Pod falhar, o Kubernetes reiniciará repetidamente o Pod até que o contêiner init tenha êxito. No entanto, se o Pod tiver o restartPolicy como Never, o Kubernetes não reiniciará o Pod, e o container principal não irá ser executado.
+
+## Usuários no K8s
+Para criar um usuário no Kubernetes, vamos precisar gerar um CSR (Certificate Signing Request) para o usuário. O usuário que vamos utilizar como exemplo é o Decio
+
    
 ## Referências
 
