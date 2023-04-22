@@ -118,7 +118,7 @@ kubectl edit daemonsets.apps daemon-set-primeiro
 
 Para atualizar pods do DaemonSet precisamos recriá-lo ou destruir todos os pods relacionado a ele. Como boa prática, temos a opção RollingUpdate
  
-## Networking (Ingress Controllers).
+## Networking
 
 Primeira coisa que devemos entender é que o Kubernetes por padrão não fornece uma solução de networking de pods em nós diferentes, para que isso seja resolvido é necessário utilizar o que chamamos de pod networking. Para resolver esse problema foi criado o Container Network Interface. O CNI nada mais é do que um conjunto de plugins para resolver o problema de comunicação entre os pods. Há diversas soluções de pod networking como add-on, tais como: Calico, Weave-net e entre outros.
 
@@ -144,7 +144,7 @@ Dispositivos fora do cluster, por padrão, não conseguem acessar os pods criado
 
 *DNS* **Por padrão no K8s, os pods de DNS-core tem a capacidade de detectar os outros pods, dentro do seu próprio Namespace ou em outro.**
 
-*Ingress* **Gerenciador de acesso externo aos serviços dentro do cluster. Ele atua como uma camada de abstração acima dos serviços e roteia as solicitações de entrada para os serviços apropriados com base nas regras definidas. Ele define um conjunto de regras de roteamento que determinam como o tráfego externo deve ser direcionado para os serviços dentro do cluster. Ele permite que você expõe vários serviços HTTP e HTTPS em um único endereço IP e porta, fornecendo assim um controle centralizado e flexível do tráfego. Podem ser implementados por meio de diferentes controladores, como o Nginx, Traefik, Istio, entre outros. Cada controlador pode oferecer diferentes recursos, como balanceamento de carga, redirecionamento, autenticação, criptografia, e etc.**
+*Ingress* **Gerenciador de acesso externo aos serviços dentro do cluster. Ele atua como uma camada de abstração acima dos serviços e roteia as solicitações de entrada para os serviços apropriados com base nas regras definidas. Ele define um conjunto de regras de roteamento que determinam como o tráfego externo deve ser direcionado para os serviços dentro do cluster. Ele permite que você expõe vários serviços HTTP e HTTPS em um único endereço IP e porta, fornecendo assim um controle centralizado e flexível do tráfego. Podem ser implementados por meio de diferentes controladores, como o Nginx, Traefik, Istio, entre outros. Cada controlador pode oferecer diferentes recursos, como balanceamento de carga, redirecionamento, autenticação, criptografia, e etc.** É um conjunto de regras para permitir que as conexões externas de entrada atinjam os serviços dentro do cluster.
 
 HPA - *Horizontal Pod AutoScaling*
 
@@ -259,6 +259,8 @@ Gerenciador de pacotes do Kubernetes. Os pacotes gerenciados pelo Helm, são cha
 *helm search repo* Procura por repositórios disponíveis para instalação.
 
 *helm install prometheus --version=14.8.0 prometheus-community/prometheus* Realizar instalação de aplicações.
+ 
+<image src="https://user-images.githubusercontent.com/12403699/233802384-83bdb138-fc8f-4fa8-becd-05aa9ce8a854.png" width="800" height="400">
  
 *helm list* Lista as aplicações instaladas.
 
