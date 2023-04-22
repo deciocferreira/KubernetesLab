@@ -259,9 +259,7 @@ Gerenciador de pacotes do Kubernetes. Os pacotes gerenciados pelo Helm, são cha
 *helm search repo* Procura por repositórios disponíveis para instalação.
 
 *helm install prometheus --version=14.8.0 prometheus-community/prometheus* Realizar instalação de aplicações.
- 
-<image src="https://user-images.githubusercontent.com/12403699/233802384-83bdb138-fc8f-4fa8-becd-05aa9ce8a854.png" width="800" height="400">
- 
+
 *helm list* Lista as aplicações instaladas.
 
 *helm uninstall nomeaplicação --keep-hisotry* Remove aplicação mantendo seu histórico.
