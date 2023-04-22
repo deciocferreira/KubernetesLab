@@ -219,10 +219,55 @@ São utilizados para separar arquivos de configuração do conteúdo da imagem d
 ## *InitContainers*
 Um ou mais containeres que são executados antes do container de um aplicativo em um Pod. Os containeres de inicialização podem conter utilitários ou scripts de configuração não presentes em uma imagem de aplicativo. Os containeres de inicialização sempre são executados até a conclusão. Cada container init deve ser concluído com sucesso antes que o próximo comece. Se o container init de um Pod falhar, o Kubernetes reiniciará repetidamente o Pod até que o contêiner init tenha êxito. No entanto, se o Pod tiver o restartPolicy como Never, o Kubernetes não reiniciará o Pod, e o container principal não irá ser executado.
 
-## Usuários no K8s
+## *Usuários no K8s*
 Para criar um usuário no Kubernetes, vamos precisar gerar um CSR (Certificate Signing Request) para o usuário. O usuário que vamos utilizar como exemplo é o Decio
 
-   
+<image src="https://user-images.githubusercontent.com/12403699/233799790-bd0cfc37-9243-4c6d-83b3-a75081e2844e.png" width="800" height="400">
+
+## *RBAC*
+Role-based Access Control - RBAC -> Controle de acesso baseado em funções é um método para fazer o controle de acesso aos recursos do Kubernetes com base nas funções dos administradores individuais em sua organização. A autorização RBAC usa o rbac.authorization.k8s.io para conduzir as decisões de autorização, permitindo que você configure políticas dinamicamente por meio da API Kubernetes.
+
+*Role e ClusterRole*
+Contém regras que representam um conjunto de permissões. As permissões são puramente aditivas (não há regras de "negação"). 
+- Uma Role sempre define permissões em um determinado namespace, ao criar uma função, você deve especificar o namespace ao qual ela pertence.
+- O ClusterRole, por outro lado, é um recurso sem namespaces.
+
+Você pode usar um ClusterRole para:
+
+- Definir permissões em recursos com namespace e ser concedido dentro de namespaces individuais;
+- Definir permissões em recursos com namespaces e ser concedido em todos os namespaces;
+- Definir permissões em recursos com escopo de cluster.
+
+Se você quiser definir uma função em um namespace, use uma Role, caso queria definir uma função em todo o cluster, use um ClusterRole. :)
+
+*RoleBinding e ClusterRoleBinding*
+Concede as permissões definidas em uma função a um usuário ou conjunto de usuários. Ele contém uma lista de assuntos (usuários, grupos ou contas de serviço) e uma referência à função que está sendo concedida. Concede permissões dentro de um namespace específico, enquanto um ClusterRoleBinding concede esse acesso a todo o cluster. Um RoleBinding pode fazer referência a qualquer papel no mesmo namespace. Em resumo, o RoleBinding é usado para vincular uma Role a um usuário em um namespace específico, enquanto o ClusterRoleBinding é usado para vincular uma ClusterRole a um usuário em todo o cluster.
+
+<image src="https://user-images.githubusercontent.com/12403699/233800765-f1b9a947-1698-4635-8919-4999d71dffc2.png" width="800" height="400">
+
+Lembrando que toda vez que nos referirmos ao ServiceAccount, estamos referindo à uma conta de usuário.
+
+## *Helm*
+Gerenciador de pacotes do Kubernetes. Os pacotes gerenciados pelo Helm, são chamados de charts, que basicamente são formados por um conjunto de manifestos Kubernetes no formato YAML e alguns templates que ajudam a manter variáveis dinâmicas de acordo com o ambiente, além de definir, instalar e atualizar até o aplicativo Kubernetes mais complexo. Os Helm charts são fáceis de criar, versionar, compartilhar e publicar.
+
+*Principais comandos*
+
+*helm repo list* Lista os repositórios adicionados.
+
+*helm repo update* Atualiza os repositórios.
+
+*helm search repo* Procura por repositórios disponíveis para instalação.
+
+*helm install prometheus --version=14.8.0 prometheus-community/prometheus* Realizar instalação de aplicações.
+ 
+*helm list* Lista as aplicações instaladas.
+
+*helm uninstall nomeaplicação --keep-hisotry* Remove aplicação mantendo seu histórico.
+
+*helm rollback nomeaplicação 1* Faz rollback da aplicação desejada com sua revision.
+
+*helm history nomeaplicação* Visualizar o histórico de mudanças da aplicação.
+
 ## Referências
 
 *https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#clean-up-policy*
@@ -240,3 +285,9 @@ Para criar um usuário no Kubernetes, vamos precisar gerar um CSR (Certificate S
 *https://github.com/kubernetes/kubernetes/*
 
 *https://kubernetes.io/docs/home/*
+
+*https://helm.sh*
+
+*https://helm.sh/docs/intro/quickstart*
+
+*https://helm.sh/docs/topics/architecture*
