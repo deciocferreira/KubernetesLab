@@ -144,7 +144,7 @@ Dispositivos fora do cluster, por padrão, não conseguem acessar os pods criado
 
 *DNS* **Por padrão no K8s, os pods de DNS-core tem a capacidade de detectar os outros pods, dentro do seu próprio Namespace ou em outro.**
 
-*Ingress* **Gerenciador de acesso externo aos serviços dentro do cluster. Ele atua como uma camada de abstração acima dos serviços e roteia as solicitações de entrada para os serviços apropriados com base nas regras definidas. Ele define um conjunto de regras de roteamento que determinam como o tráfego externo deve ser direcionado para os serviços dentro do cluster. Ele permite que você expõe vários serviços HTTP e HTTPS em um único endereço IP e porta, fornecendo assim um controle centralizado e flexível do tráfego. Podem ser implementados por meio de diferentes controladores, como o Nginx, Traefik, Istio, entre outros. Cada controlador pode oferecer diferentes recursos, como balanceamento de carga, redirecionamento, autenticação, criptografia, e etc.** É um conjunto de regras para permitir que as conexões externas de entrada atinjam os serviços dentro do cluster.
+*Ingress* **Gerenciador de acesso externo aos serviços dentro do cluster. Ele atua como uma camada de abstração acima dos serviços e roteia as solicitações de entrada para os serviços apropriados com base nas regras definidas. Ele define um conjunto de regras de roteamento que determinam como o tráfego externo deve ser direcionado para os serviços dentro do cluster, permitindo que você possa expor vários serviços HTTP e HTTPS em um único endereço IP e porta, fornecendo assim um controle centralizado e flexível do tráfego. Podem ser implementados por meio de diferentes controladores, como o Nginx, Traefik, Istio, entre outros. Cada controlador pode oferecer diferentes recursos, como balanceamento de carga, redirecionamento, autenticação, criptografia, e etc.** 
 
 HPA - *Horizontal Pod AutoScaling*
 
@@ -159,9 +159,20 @@ kubectl get endpoints
 Namespaces e quotas:
  - Supervisord é o responsável por monitorar e restabelecer, se necessário, o kubelet e o Docker. Por esse motivo, quando existe algum problema em relação ao kubelet, como por exemplo o uso do driver cgroup diferente do que está rodando no Docker, você perceberá que ele ficará tentando subir o kubelet frequentemente.
  
-- Storage: No ETCD são armazenados o estado do cluster, rede e outras informações persistentes.
-
 *Network e policies*
+
+## *Security Context*
+É um conjunto de configurações onde definimos privilégios e acessos a um pod. Essas configurações incluem:
+
+- Definir o usuário e grupo do contêiner;
+- Se o contêiner será um contêiner privilegiado;
+- Linux Capabilities;
+- Se o contêiner pode escalar privilégios;
+- Utilizar SELinux/APPArmor.
+
+Para utilizar essa configuração precisamos incluir o bloco securityCotext no manifesto do pod.
+
+- Storage: No ETCD são armazenados o estado do cluster, rede e outras informações persistentes.
  
 ##Kubectl Taint
  
@@ -262,7 +273,7 @@ Gerenciador de pacotes do Kubernetes. Os pacotes gerenciados pelo Helm, são cha
 
 *helm list* Lista as aplicações instaladas.
 
-*helm uninstall nomeaplicação --keep-hisotry* Remove aplicação mantendo seu histórico.
+*helm uninstall nomeaplicação --keep-hisotory* Remove aplicação mantendo seu histórico.
 
 *helm rollback nomeaplicação 1* Faz rollback da aplicação desejada com sua revision.
 
