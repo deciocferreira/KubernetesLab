@@ -170,13 +170,20 @@ Namespaces e quotas:
 - Se o contêiner pode escalar privilégios;
 - Utilizar SELinux/APPArmor.
 
-Para utilizar essa configuração precisamos incluir o bloco securityCotext no manifesto do pod.
+Para utilizar essa configuração precisamos incluir o bloco securityContext no manifesto do pod.
 
-- Storage: No ETCD são armazenados o estado do cluster, rede e outras informações persistentes.
+## *Capabilities*
+   Nos sistemas UNIX existem duas categorias de processos: processos privilegiados que são executados como o UID 0 (root ou superusuario) e os não privilegiados que possuem o UID diferente de 0. Os processos privilegiados dão bypass em todas as verificações do kernel. Já os processos não-privilegiados passam por algumas checagens como UID, GID e ACLS. No kernel 2.2, o GNU/Linux dividiu as formas tradicionais de privilégios associados ao superusuários em unidades diferentes, agora conhecidas como capabilities, que podem ser habilitadas e desabilitadas independentemente umas das outras. Essas capacidades são atribuídas por thread.
+
+<image src="https://user-images.githubusercontent.com/12403699/234321851-4c7f3475-d335-4ecb-a495-9c3c05e7d612.png" width="800" height="500"> 
+
+## *Storage*
+   ETCD é um database de armazenamento de chave-valor de alta disponibilidade. Em um banco de dados de chave-valor, quando consultamos e obtemos a chave, é retornado o valor atribuido à aquela chave. No K8s, o ETCD é responsável por registrar todo tipo de informação do cluster, tais como: nodes, roles, pods, configs, accounts, secrets, etc. Quando o cluster é iniciado pelo kubeadm, um pod do etcd é criado no node master e toda informação que é apresentada ao usuário quando executado o comando kubect get são informações armazenadas no ETCD. Como nos demais serviços do K8s, ele utiliza certificados PKI para autenticação sobre TLS, essas chaves são declaradas no manifesto de configuração.
+
+Essas chaves vão ser utilizadas pelos demais componentes do cluster como, por exemplo, o API Server possam conectar e fazerem alterações, com isso vamos precisar utilizar esses certificados para nos autenticar.
  
 ##Kubectl Taint
- 
-*Taint* no K8s é adicionar propriedades ao nó do cluster para impedir que os pods sejam alocados em nós inapropriados. Por exemplo, todo nó master do cluster é marcado para não receber pods que não sejam de gerenciamento do cluster. O nó master está marcado com o taint NoSchedule, assim o scheduler do Kubernetes não aloca pods no nó master, e procura outros nós no cluster sem essa marca.
+    *Taint* no K8s é adicionar propriedades ao nó do cluster para impedir que os pods sejam alocados em nós inapropriados. Por exemplo, todo nó master do cluster é marcado para não receber pods que não sejam de gerenciamento do cluster. O nó master está marcado com o taint NoSchedule, assim o scheduler do Kubernetes não aloca pods no nó master, e procura outros nós no cluster sem essa marca.
 
 <image src="https://user-images.githubusercontent.com/12403699/232866300-a86a6a3c-bcf5-41e8-8b0a-5afab349be53.png" width="800" height="500"> 
  
@@ -187,19 +194,17 @@ São utilizadas para a organização do cluster, vamos listar pods que tenha a m
 <image src="https://user-images.githubusercontent.com/12403699/233195389-d9b32da6-bd7e-4656-8ffe-689802db6378.png" width="800" height="500">   
 
 ## Node Selector 
-
-É uma forma de classificar nossos nodes, através das labels, como por exemplo se é produção ou não, se consome muita CPU ou muita RAM, se precisa estar em determinado Namespace.
+   É uma forma de classificar nossos nodes, através das labels, como por exemplo se é produção ou não, se consome muita CPU ou muita RAM, se precisa estar em determinado Namespace.
  
-## Kubectl edit
-
-Se usa quando é necessário editar algum deployment ou qualquer objeto Kubernetes(pods, services, configmaps, e etc). O comando abre o arquivo de configuração YAML do objeto em um editor de texto para que você possa editá-lo diretamente. É importante lembrar que a edição direta pode ser perigosa se você não tiver cuidado para não alterar configurações importantes. Sempre faça um backup da configuração antes de editá-la e verifique as alterações antes de aplicá-las.
+## Kubectl edit 
+   Se usa quando é necessário editar algum deployment ou qualquer objeto Kubernetes(pods, services, configmaps, e etc). O comando abre o arquivo de configuração YAML do objeto em um editor de texto para que você possa editá-lo diretamente. É importante lembrar que a edição direta pode ser perigosa se você não tiver cuidado para não alterar configurações importantes. Sempre faça um backup da configuração antes de editá-la e verifique as alterações antes de aplicá-las.
 
 *kubectl edit deployment deployment.yaml* e adicionar informações de *Label* e ou *nodeSelector* conforme necessidade.
  
 ## Volumes no K8s
  
 *Empty-Dir:*&nbsp;
-São criados sempre que um Pod é atribuído a um nó existente. Esse volume é criado inicialmente vazio, e todos os contêineres do Pod podem ler e gravar arquivos no volume. Nele não há persistência de dados. Sempre que o Pod é removido de um nó, os dados no EmptyDir são excluídos permanentemente. É importante ressaltar que os dados não são excluídos em casos de falhas nos containeres. 
+   São criados sempre que um Pod é atribuído a um nó existente. Esse volume é criado inicialmente vazio, e todos os contêineres do Pod podem ler e gravar arquivos no volume. Nele não há persistência de dados. Sempre que o Pod é removido de um nó, os dados no EmptyDir são excluídos permanentemente. É importante ressaltar que os dados não são excluídos em casos de falhas nos containeres. 
 
 *Persistent Volume:*&nbsp;
 Volumes que disponibilizam uma API para usuários e administradores que resume detalhes de como o armazenamento é fornecido e consumido pelos Pods. Para o melhor controle desse sistema foi introduzido dois recursos de API: PersistentVolume e PersistentVolumeClaim.
