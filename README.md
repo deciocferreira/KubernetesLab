@@ -1,8 +1,7 @@
-# Kubernetes 
+<p align="center"> <image src="https://user-images.githubusercontent.com/12403699/227604690-54fb4263-a38a-4cd5-a4dc-951b19861625.png" width="80" height="80"> </p>
+<h1 align ="center"> Kubernetes </h1>
 
-<image src="https://user-images.githubusercontent.com/12403699/227604690-54fb4263-a38a-4cd5-a4dc-951b19861625.png" width="80" height="80">
-
-Orquestrador de containers. Responsável por organizar, controlar e gerenciar containers.
+<p align="center"> Projeto Open source de orquestração de Containers. </p>
 
 ## Container
 Container é uma forma de realizar isolamento de recursos. Quando criamos um Pod podemos especificar a quantidade de CPU e Memória (RAM) que pode ser consumida em cada container. Quando algum container contém a configuração de limite de recursos o Scheduler fica responsável por alocar esse contêiner no melhor nó possível de acordo com os recursos disponíveis.
@@ -10,12 +9,24 @@ Container é uma forma de realizar isolamento de recursos. Quando criamos um Pod
 Podemos configurar dois tipos de recursos, CPU que é especificada em unidades de núcleos e Memória que é especificada em unidades de bytes. 
 
 Container Engine
-- Responsável pela criação do container (docker, podman) pontos de montagem, rede,volume e verificação da saúde do container. Não conversa com o Kernel diretamente e depende do Container runtime para essa finalidade.
+-  Responsável por gerenciar e certificar que os recursos(Imagens, volumes, pontos de montagem, rede e verificação da saúde em geral) dos containers estejam devidamente isolados. Opções como Docker, o CRI-O e o Podman são bem conhecidas e preparadas para o ambiente produtivo. Docker, como todos sabem, é o Container Engine mais popular e ele utiliza como Container Runtime o containerd.
+> Não conversa com o Kernel diretamente e depende do Container runtime para essa finalidade.
 
 Container Runtime
-- Especializado em conversar com o Kernel e executar os container, garantir que funcionem os isolamentos
-Low Level executados pelo Kernel(Sandbox, RunC). 
-High level executados por um Container Engine (ContainerD)
+
+- Desempenha o papel de executor dos containers nos nós. Quando você está utilizando Docker ou Podman para executar containers em sua máquina, por exemplo, você está fazendo uso de algum Container Runtime, ou melhor, o seu Container Engine está fazendo uso de algum Container Runtime.
+
+Temos quatro tipos de Container Runtime:
+
+Low-level: são os Container Runtime que são executados diretamente pelo Kernel, como o runc, o crun e o runsc.
+
+High-level: são os Container Runtime que são executados por um Container Engine, como o containerd, o CRI-O e o Podman.
+
+Sandbox: são os Container Runtime que são executados por um Container Engine e que são responsáveis por executar containers de forma segura em unikernels ou utilizando algum proxy para fazer a comunicação com o Kernel. O gVisor é um exemplo.
+
+Virtualized: são os Container Runtime que são executados por um Container Engine e que são responsáveis por executar containers de forma segura em máquinas virtuais. A performance aqui é um pouco menor do que quando temos um sendo executado nativamente. O Kata Containers é um exemplo.
+
+> É necessário ter um Container Runtime instalado em cada um dos nós.
 
 OCI
 - Open Container Initiative. Padronização para adoção de containers.
