@@ -1,7 +1,8 @@
 <p align="center"> <image src="https://user-images.githubusercontent.com/12403699/227604690-54fb4263-a38a-4cd5-a4dc-951b19861625.png" width="80" height="80"> </p>
 <h1 align ="center"> Kubernetes </h1>
 
-<p align="center"> Projeto Open source de orquestração de Containers. </p>
+<p align="left"> É uma plataforma Open source de orquestração de containers que facilita a implantação e gerenciamento de aplicativos em um ambiente de cluster. Ele possui uma arquitetura composta por um Control Plane, que toma decisões e gerencia o estado do sistema, e Nodes, que executam as cargas de trabalho. Os Pods são as unidades básicas que contêm um ou mais contêineres e compartilham recursos. O Kubernetes usa Deployments para garantir o estado desejado dos Pods e Serviços para fornecer conectividade de rede. Com recursos avançados, como escalonamento automático e armazenamento persistente, o Kubernetes oferece uma solução confiável para executar aplicativos em escala.
+</p>
 
 ## Container
 Container é uma forma de realizar isolamento de recursos. Quando criamos um Pod podemos especificar a quantidade de CPU e Memória (RAM) que pode ser consumida em cada container. Quando algum container contém a configuração de limite de recursos o Scheduler fica responsável por alocar esse contêiner no melhor nó possível de acordo com os recursos disponíveis.
