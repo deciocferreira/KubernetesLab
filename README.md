@@ -36,7 +36,7 @@ OCI
 
 É um modelo baseado em control plane/workers, que constituem um cluster, onde para seu funcionamento é recomendado no mínimo três nós: o nó control-plane, responsável (por padrão) pelo gerenciamento do cluster, e os demais como workers, executores das aplicações.
 
-<image src="https://user-images.githubusercontent.com/12403699/229541775-1db96bc0-641b-41f5-bc9e-a51f7c7072a7.png" width="800" height="500">
+<image src="https://github.com/deciocferreira/KubernetesLab/assets/12403699/74dbb8f0-be51-440d-885a-2e87afc48680" width="800" height="500">
 
 *ControlPlane* **Controla o Cluster. Responsável por garantir a saúde, capacidade e estado do Cluster.**
 Componentes:
