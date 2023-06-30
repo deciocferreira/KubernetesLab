@@ -34,21 +34,23 @@ OCI
  
 ## Arquitetura do K8s
 
-É um modelo baseado em control plane/workers, que constituem um cluster, onde para seu funcionamento é recomendado no mínimo três nós: o nó control-plane, responsável (por padrão) pelo gerenciamento do cluster, e os demais como workers, executores das aplicações.
-
 <image src="https://github.com/deciocferreira/KubernetesLab/assets/12403699/74dbb8f0-be51-440d-885a-2e87afc48680" width="800" height="500">
 
-*ControlPlane* **Controla o Cluster. Responsável por garantir a saúde, capacidade e estado do Cluster.**
+*ControlPlane* **controla o Cluster. Responsável por garantir a saúde, capacidade e estado do Cluster.**
+
 Componentes:
  - ETCD (função de banco do Cluster, guardando todo o estado do mesmo)
  - KubeAPIServer (Conversa com o ETCD e todo o cluster)
  - KubeScheduler (Responsável por fazer o agendamento e gerenciamento de novos containers: pods, volumes e etc)
  - Kube/CloudControllerManager (Responsável por garantir o estado de funcionamento do cluster, gerente dos outros controllers)
 
-*Workers* **Contem as aplicações em execução.**
+*Workers* **contém as aplicações em execução.**
+
 Componentes:
  - Kubelet (Agent do Kubernets dentro do node conversando com o KubeAPIServer)
  - KubeProxy (Faz a comunicação dos Pods com o restante da internet, expondo-o)
+
+> É um modelo baseado em control plane/workers, que constituem um cluster, onde para seu funcionamento é recomendado no mínimo três nós: o nó control-plane, responsável (por padrão) pelo gerenciamento do cluster, e os demais como workers, executores das aplicações.
  
 ## Portas de comunicação
 
@@ -99,7 +101,7 @@ Componentes:
 
 <image src="https://user-images.githubusercontent.com/12403699/233205526-1826b85b-696d-4321-99f8-baf1bbe331a0.png" width="800" height="400">
 
-##Principais Comandos
+## Principais Comandos
  
 <image src="https://user-images.githubusercontent.com/12403699/232628319-12e7f0a5-fb1b-4da1-99bf-155e77f212a4.png" width="700" height="350">
 
